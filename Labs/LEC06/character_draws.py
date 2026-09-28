@@ -77,8 +77,6 @@ while True:
     move_rectangle()
     move_triangle()
 
-    break
-
 
 delay(1)
 close_canvas()
