@@ -44,7 +44,12 @@ def move_rectangle():
         move_left()
 
 def move_AtoB():
-    print("move_AtoB")
+    n = 100
+    for step in range(n+1):
+        t = step / n
+        x = 100 + (700 - 100) * t
+        y = 100
+        draw_boy(x, y)
 
 def move_BtoC():
     print("move_BtoC")
@@ -53,9 +58,9 @@ def move_CtoA():
     print("move_CtoA")
 
 def move_triangle():
-        move_AtoB()
-        move_BtoC()
-        move_CtoA()
+    move_AtoB()
+    move_BtoC()
+    move_CtoA()
 
 while True:
     move_circle()
