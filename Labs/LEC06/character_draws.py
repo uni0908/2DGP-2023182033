@@ -52,7 +52,12 @@ def move_AtoB():
         draw_boy(x, y)
 
 def move_BtoC():
-    print("move_BtoC")
+    n = 100
+    for step in range(n+1):
+        t = step / n
+        x = 700 - (700 - 400) * t
+        y = 100 + (500 - 100) * t
+        draw_boy(x, y)
 
 def move_CtoA():
     print("move_CtoA")
