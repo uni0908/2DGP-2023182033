@@ -43,8 +43,19 @@ def move_rectangle():
         move_bottom()
         move_left()
 
+def move_AtoB():
+    print("move_AtoB")
+
+def move_BtoC():
+    print("move_BtoC")
+
+def move_CtoA():
+    print("move_CtoA")
+
 def move_triangle():
-    print('triangle')
+        move_AtoB()
+        move_BtoC()
+        move_CtoA()
 
 while True:
     move_circle()
