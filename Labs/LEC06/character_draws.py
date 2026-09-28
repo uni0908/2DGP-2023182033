@@ -60,7 +60,12 @@ def move_BtoC():
         draw_boy(x, y)
 
 def move_CtoA():
-    print("move_CtoA")
+    n = 100
+    for step in range(n+1):
+        t = step / n
+        x = 400 - (400 - 100) * t
+        y = 500 - (500 - 100) * t
+        draw_boy(x, y)
 
 def move_triangle():
     move_AtoB()
