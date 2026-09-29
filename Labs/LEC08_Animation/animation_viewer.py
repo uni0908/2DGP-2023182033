@@ -43,26 +43,23 @@ attack = (
 
 sprite = (walk, run, run_attack, attack)
 
-action_index = 0
-frame_index = 0
 
-for action_index, action in enumerate(sprite):
-    print('액션 번호:', action_index, '프레임 수:', len(action))
+def play_action(action):
+    for frame in action:
+        clear_canvas()
+        draw_rectangle(
+            0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
+            r=161, g=161, b=161, filled=True
+        )
+        character.clip_draw(*frame, 400, 300)
+        update_canvas()
+        get_events()
+        delay(0.1)
+
+
 
 while True:
-    clear_canvas()
-    draw_rectangle(0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
-                   r=161, g=161, b=161, filled=True)
-
-    action = sprite[action_index]
-    frame = action[frame_index]
-    frame_index = (frame_index + 1) % len(action)
-
-    character.clip_draw(*frame, 400, 300)
-
-    update_canvas()
-    get_events()
-    delay(0.1)
+    play_action(walk)
 
     break
 
