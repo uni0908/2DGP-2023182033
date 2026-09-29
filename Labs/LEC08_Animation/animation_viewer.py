@@ -45,16 +45,17 @@ sprite = (walk, run, run_attack, attack)
 
 
 def play_action(action):
-    for frame in action:
-        clear_canvas()
-        draw_rectangle(
-            0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
-            r=161, g=161, b=161, filled=True
-        )
-        character.clip_draw(*frame, 400, 300)
-        update_canvas()
-        get_events()
-        delay(0.1)
+    for repeat in range(5):
+        for frame in action:
+            clear_canvas()
+            draw_rectangle(
+                0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
+                r=161, g=161, b=161, filled=True
+            )
+            character.clip_draw(*frame, 400, 300)
+            update_canvas()
+            get_events()
+            delay(0.1)
 
 
 
