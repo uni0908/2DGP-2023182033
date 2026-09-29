@@ -69,7 +69,17 @@ def play_action(action):
             update_canvas()
             delay(0.1)
 
-    delay(1)
+    pause_start = get_time()
+
+    while get_time() - pause_start < 1.0:
+        for event in get_events():
+            if event.type == SDL_QUIT:
+                return False
+            if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+                return False
+
+        delay(0.01)
+
     return True
 
 
