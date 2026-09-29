@@ -51,15 +51,20 @@ attack2 = (
 
 sprite = (walk, run, run_attack, attack1, attack2)
 
+def quit_requested():
+    for event in get_events():
+        if event.type == SDL_QUIT:
+            return True
+        if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            return True
+
+    return False
 
 def play_action(action):
     for repeat in range(5):
         for frame in action:
-            for event in get_events():
-                if event.type == SDL_QUIT:
-                    return False
-                if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-                    return False
+            if quit_requested():
+                return False
             clear_canvas()
             draw_rectangle(
                 0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
@@ -72,11 +77,8 @@ def play_action(action):
     pause_start = get_time()
 
     while get_time() - pause_start < 1.0:
-        for event in get_events():
-            if event.type == SDL_QUIT:
-                return False
-            if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-                return False
+        if quit_requested():
+            return False
 
         delay(0.01)
 
