@@ -15,6 +15,16 @@ walk = (
     (1398, 869, 88, 128),
 )
 
+run = (
+    (454, 685, 96, 122),
+    (588, 685, 108, 118),
+    (734, 685, 98, 124),
+    (870, 685, 102, 126),
+    (1010, 685, 96, 120),
+    (1144, 685, 108, 118),
+    (1290, 685, 96, 124),
+)
+
 frame_index = 0
 
 while True:
@@ -22,8 +32,8 @@ while True:
     draw_rectangle(0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
                    r=161, g=161, b=161, filled=True)
 
-    frame = walk[frame_index]
-    frame_index = (frame_index + 1) % len(walk)
+    frame = run[frame_index]
+    frame_index = (frame_index + 1) % len(run)
 
     character.clip_draw(*frame, 400, 300)
 
