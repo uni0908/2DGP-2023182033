@@ -2,18 +2,20 @@ from pico2d import *
 
 open_canvas()
 
-character = load_image('adventurer_actions.png')
+character = load_image('knight1_spritelist_1.png')
 
 walk = (
-    (98, 744, 156, 184),
-    (298, 744, 172, 184),
-    (498, 744, 166, 184),
-    (712, 744, 146, 184),
-    (888, 744, 190, 184),
-    (1106, 744, 142, 184),
+    (454, 869, 80, 128),
+    (586, 869, 86, 126),
+    (724, 869, 96, 126),
+    (872, 869, 94, 128),
+    (1028, 867, 92, 128),
+    (1133, 868, 86, 126),
+    (1260, 869, 86, 128),
+    (1398, 869, 88, 128),
 )
 
-frame_index = 3
+frame_index = 0
 
 while True:
     clear_canvas()
@@ -21,6 +23,7 @@ while True:
                    r=0, g=0, b=0, filled=True)
 
     frame = walk[frame_index]
+    frame_index = (frame_index + 1) % len(walk)
 
     character.clip_draw(*frame, 400, 300)
 
