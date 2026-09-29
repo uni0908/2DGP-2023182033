@@ -70,7 +70,9 @@ def play_action(action):
                 0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
                 r=161, g=161, b=161, filled=True
             )
-            character.clip_draw(*frame, 400, 300)
+            x, y, w, h = frame
+            character.clip_draw(x, y, w, h,
+                                400, 300, w * 3, h * 3)
             update_canvas()
             delay(0.1)
 
