@@ -47,6 +47,11 @@ sprite = (walk, run, run_attack, attack)
 def play_action(action):
     for repeat in range(5):
         for frame in action:
+            for event in get_events():
+                if event.type == SDL_QUIT:
+                    return False
+                if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+                    return False
             clear_canvas()
             draw_rectangle(
                 0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
@@ -54,15 +59,19 @@ def play_action(action):
             )
             character.clip_draw(*frame, 400, 300)
             update_canvas()
-            get_events()
             delay(0.1)
 
     delay(1)
+    return True
 
 
-while True:
+running = True
+
+while running:
     for action in sprite:
-        play_action(action)
+        running = play_action(action)
+        if not running:
+            break
 
 close_canvas()
 
