@@ -25,6 +25,15 @@ run = (
     (1290, 685, 96, 124),
 )
 
+run_attack = (
+    (454, 477, 112, 150),
+    (590, 477, 120, 138),
+    (734, 477, 114, 126),
+    (872, 477, 130, 124),
+    (1026, 477, 128, 124),
+    (1178, 477, 136, 116),
+)
+
 frame_index = 0
 
 while True:
@@ -32,8 +41,8 @@ while True:
     draw_rectangle(0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
                    r=161, g=161, b=161, filled=True)
 
-    frame = run[frame_index]
-    frame_index = (frame_index + 1) % len(run)
+    frame = run_attack[frame_index]
+    frame_index = (frame_index + 1) % len(run_attack)
 
     character.clip_draw(*frame, 400, 300)
 
