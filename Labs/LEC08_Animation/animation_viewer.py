@@ -57,6 +57,7 @@ def play_action(action):
             get_events()
             delay(0.1)
 
+    delay(1)
 
 
 while True:
