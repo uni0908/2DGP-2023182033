@@ -41,6 +41,9 @@ attack = (
     (1040, 66, 132, 128),
 )
 
+sprite = (walk, run, run_attack, attack)
+
+action_index = 1
 frame_index = 0
 
 while True:
@@ -48,8 +51,9 @@ while True:
     draw_rectangle(0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
                    r=161, g=161, b=161, filled=True)
 
-    frame = attack[frame_index]
-    frame_index = (frame_index + 1) % len(attack)
+    action = sprite[action_index]
+    frame = action[frame_index]
+    frame_index = (frame_index + 1) % len(action)
 
     character.clip_draw(*frame, 400, 300)
 
