@@ -64,7 +64,5 @@ while True:
     for action in sprite:
         play_action(action)
 
-    break
-
 close_canvas()
 
