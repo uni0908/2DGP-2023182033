@@ -34,14 +34,22 @@ run_attack = (
     (1178, 477, 136, 116),
 )
 
-attack = (
+attack1 = (
+    (454, 271, 86, 128),
+    (586, 271, 118, 128),
+    (750, 271, 128, 128),
+    (948, 271, 66, 128),
+    (1084, 271, 170, 148),
+)
+
+attack2 = (
     (454, 66, 84, 150),
     (644, 66, 86, 142),
     (838, 66, 176, 136),
     (1040, 66, 132, 128),
 )
 
-sprite = (walk, run, run_attack, attack)
+sprite = (walk, run, run_attack, attack1, attack2)
 
 
 def play_action(action):
