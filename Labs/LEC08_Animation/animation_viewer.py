@@ -20,7 +20,7 @@ frame_index = 0
 while True:
     clear_canvas()
     draw_rectangle(0, 0, get_canvas_width() - 1, get_canvas_height() - 1,
-                   r=0, g=0, b=0, filled=True)
+                   r=161, g=161, b=161, filled=True)
 
     frame = walk[frame_index]
     frame_index = (frame_index + 1) % len(walk)
