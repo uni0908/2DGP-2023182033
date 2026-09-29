@@ -43,8 +43,11 @@ attack = (
 
 sprite = (walk, run, run_attack, attack)
 
-action_index = 1
+action_index = 0
 frame_index = 0
+
+for action_index, action in enumerate(sprite):
+    print('액션 번호:', action_index, '프레임 수:', len(action))
 
 while True:
     clear_canvas()
@@ -57,10 +60,11 @@ while True:
 
     character.clip_draw(*frame, 400, 300)
 
-
     update_canvas()
     get_events()
     delay(0.1)
+
+    break
 
 close_canvas()
 
