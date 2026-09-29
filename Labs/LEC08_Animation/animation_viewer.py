@@ -61,7 +61,8 @@ def play_action(action):
 
 
 while True:
-    play_action(walk)
+    for action in sprite:
+        play_action(action)
 
     break
 
