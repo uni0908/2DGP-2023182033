@@ -10,7 +10,13 @@ CANVAS_HEIGHT = 800
 SCALE = 4
 IMAGE_PATH = Path(__file__).resolve().with_name('sonic-sprite.png')
 # 원본 왼쪽 위 기준 (x, top, width, height).
-FIRST_FRAME = (1, 37, 29, 41)
+WALK = (
+    (1, 39, 29, 39), (31, 40, 26, 38), (58, 39, 28, 39),
+    (86, 40, 30, 38), (118, 40, 30, 38), (150, 40, 30, 38),
+    (182, 40, 29, 38), (211, 39, 29, 38), (240, 39, 29, 38),
+    (270, 45, 24, 32), (302, 51, 29, 26),
+)
+FIRST_FRAME = WALK[0]
 
 
 def draw_frame(sprite, frame):
