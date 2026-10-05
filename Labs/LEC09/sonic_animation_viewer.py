@@ -11,6 +11,7 @@ SCALE = 4
 FRAME_SECONDS = 0.1
 REPEAT_COUNT = 5
 PAUSE_SECONDS = 1.0
+POLL_SECONDS = 0.005
 IMAGE_PATH = Path(__file__).resolve().with_name('sonic-sprite.png')
 # 원본 왼쪽 위 기준 (x, top, width, height).
 WALK = (
@@ -85,15 +86,22 @@ def quit_requested():
                for event in pico2d.get_events())
 
 
+def run_loop(sprite, playback):
+    """정지 상태에서도 매 루프 종료 입력을 확인한다."""
+    render(sprite, playback.frame)
+    playback.deadline = pico2d.get_time() + FRAME_SECONDS
+    while not quit_requested():
+        playback.update(pico2d.get_time())
+        render(sprite, playback.frame)
+        pico2d.delay(POLL_SECONDS)
+
+
 def main():
     pico2d.open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     try:
         sprite = load_sprite()
         playback = Playback(pico2d.get_time())
-        while not quit_requested():
-            playback.update(pico2d.get_time())
-            render(sprite, playback.frame)
-            pico2d.delay(0.01)
+        run_loop(sprite, playback)
     finally:
         pico2d.close_canvas()
 
