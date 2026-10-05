@@ -31,12 +31,17 @@ ACTIONS = (('걷기 및 회전 진입', WALK), ('달리기', RUN))
 
 
 class Playback:
-    def __init__(self, now):
-        self.frames = WALK
+    def __init__(self, now, actions=ACTIONS):
+        self.actions = actions
+        self.action_index = 0
         self.frame_index = 0
         self.completed_repeats = 0
         self.paused = False
         self.deadline = now + FRAME_SECONDS
+
+    @property
+    def frames(self):
+        return self.actions[self.action_index][1]
 
     @property
     def frame(self):
@@ -46,6 +51,7 @@ class Playback:
         if now < self.deadline:
             return
         if self.paused:
+            self.action_index = min(self.action_index + 1, len(self.actions) - 1)
             self.frame_index = 0
             self.completed_repeats = 0
             self.paused = False
