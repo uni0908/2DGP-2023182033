@@ -31,8 +31,8 @@ class Playback:
         return self.frames[self.frame_index]
 
     def update(self, now):
-        if now >= self.deadline and self.frame_index < len(self.frames) - 1:
-            self.frame_index += 1
+        if now >= self.deadline:
+            self.frame_index = (self.frame_index + 1) % len(self.frames)
             self.deadline = now + FRAME_SECONDS
 
 
