@@ -8,6 +8,7 @@ import pico2d
 CANVAS_WIDTH = 1200
 CANVAS_HEIGHT = 800
 SCALE = 4
+FRAME_SECONDS = 0.1
 IMAGE_PATH = Path(__file__).resolve().with_name('sonic-sprite.png')
 # 원본 왼쪽 위 기준 (x, top, width, height).
 WALK = (
@@ -17,6 +18,22 @@ WALK = (
     (270, 45, 24, 32), (302, 51, 29, 26),
 )
 FIRST_FRAME = WALK[0]
+
+
+class Playback:
+    def __init__(self, now):
+        self.frames = WALK
+        self.frame_index = 0
+        self.deadline = now + FRAME_SECONDS
+
+    @property
+    def frame(self):
+        return self.frames[self.frame_index]
+
+    def update(self, now):
+        if now >= self.deadline and self.frame_index < len(self.frames) - 1:
+            self.frame_index += 1
+            self.deadline = now + FRAME_SECONDS
 
 
 def draw_frame(sprite, frame):
@@ -53,8 +70,10 @@ def main():
     pico2d.open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     try:
         sprite = load_sprite()
+        playback = Playback(pico2d.get_time())
         while not quit_requested():
-            render(sprite, FIRST_FRAME)
+            playback.update(pico2d.get_time())
+            render(sprite, playback.frame)
             pico2d.delay(0.01)
     finally:
         pico2d.close_canvas()
