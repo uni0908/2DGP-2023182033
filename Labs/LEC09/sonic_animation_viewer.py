@@ -10,6 +10,7 @@ CANVAS_HEIGHT = 800
 SCALE = 4
 FRAME_SECONDS = 0.1
 REPEAT_COUNT = 5
+PAUSE_SECONDS = 1.0
 IMAGE_PATH = Path(__file__).resolve().with_name('sonic-sprite.png')
 # 원본 왼쪽 위 기준 (x, top, width, height).
 WALK = (
@@ -34,12 +35,19 @@ class Playback:
         return self.frames[self.frame_index]
 
     def update(self, now):
-        if self.paused or now < self.deadline:
+        if now < self.deadline:
+            return
+        if self.paused:
+            self.frame_index = 0
+            self.completed_repeats = 0
+            self.paused = False
+            self.deadline = now + FRAME_SECONDS
             return
         if self.frame_index == len(self.frames) - 1:
             self.completed_repeats += 1
             if self.completed_repeats == REPEAT_COUNT:
                 self.paused = True
+                self.deadline = now + PAUSE_SECONDS
                 return
             self.frame_index = 0
         else:
