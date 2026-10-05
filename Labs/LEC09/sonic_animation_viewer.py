@@ -1,6 +1,7 @@
 """Sonic 스프라이트 애니메이션 뷰어."""
 
 from pathlib import Path
+import math
 import sys
 
 import pico2d
@@ -13,6 +14,7 @@ REPEAT_COUNT = 5
 PAUSE_SECONDS = 1.0
 POLL_SECONDS = 0.005
 EDGE_MARGIN = 20
+JUMP_HEIGHT = 160
 IMAGE_PATH = Path(__file__).resolve().with_name('sonic-sprite.png')
 # 원본 왼쪽 위 기준 (x, top, width, height).
 WALK = (
@@ -114,6 +116,7 @@ class Playback:
     def reset_motion(self):
         self.x = CANVAS_WIDTH / 2
         self.y = CANVAS_HEIGHT / 2
+        self.jump_offset = 0.0
         self.vx, self.vy = MOTION_SPEEDS[self.actions[self.action_index][0]]
         self.half_width = max(frame[2] for frame in self.frames) * SCALE / 2
         self.half_height = max(frame[3] for frame in self.frames) * SCALE / 2
@@ -128,6 +131,16 @@ class Playback:
             EDGE_MARGIN + self.half_height,
             CANVAS_HEIGHT - EDGE_MARGIN - self.half_height)
 
+    def update_jump(self, now):
+        if self.actions[self.action_index][0] != '공중 회전':
+            return
+        # 프레임 한 바퀴와 점프 한 번을 일치시킨다.
+        fraction = min(1.0, max(0.0,
+                       (now - (self.deadline - FRAME_SECONDS)) / FRAME_SECONDS))
+        progress = (self.frame_index + fraction) / len(self.frames)
+        available_height = CANVAS_HEIGHT - EDGE_MARGIN - self.half_height - self.y
+        self.jump_offset = min(JUMP_HEIGHT, available_height) * math.sin(math.pi * progress)
+
     @property
     def frames(self):
         return self.actions[self.action_index][1]
@@ -141,6 +154,7 @@ class Playback:
         self.last_update = now
         if not self.paused:
             self.move(elapsed)
+            self.update_jump(now)
         if now < self.deadline:
             return
         if self.paused:
@@ -175,7 +189,8 @@ def render(sprite, playback):
     pico2d.clear_canvas()
     pico2d.draw_rectangle(0, 0, CANVAS_WIDTH - 1, CANVAS_HEIGHT - 1,
                          r=160, g=160, b=160, filled=True)
-    draw_frame(sprite, playback.frame, (playback.x, playback.y), playback.vx < 0)
+    draw_frame(sprite, playback.frame,
+               (playback.x, playback.y + playback.jump_offset), playback.vx < 0)
     pico2d.update_canvas()
 
 
