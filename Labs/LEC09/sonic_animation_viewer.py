@@ -8,6 +8,14 @@ import pico2d
 CANVAS_WIDTH = 1200
 CANVAS_HEIGHT = 800
 IMAGE_PATH = Path(__file__).resolve().with_name('sonic-sprite.png')
+# 원본 왼쪽 위 기준 (x, top, width, height).
+FIRST_FRAME = (1, 37, 29, 41)
+
+
+def draw_frame(sprite, frame):
+    x, top, width, height = frame
+    sprite.clip_draw(x, sprite.h - top - height, width, height,
+                     CANVAS_WIDTH // 2, CANVAS_HEIGHT // 2, width, height)
 
 
 def load_sprite(path=IMAGE_PATH):
@@ -31,6 +39,7 @@ def main():
         sprite = load_sprite()
         while not quit_requested():
             pico2d.clear_canvas()
+            draw_frame(sprite, FIRST_FRAME)
             pico2d.update_canvas()
             pico2d.delay(0.01)
     finally:
