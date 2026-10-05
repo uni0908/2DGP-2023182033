@@ -12,6 +12,7 @@ FRAME_SECONDS = 0.1
 REPEAT_COUNT = 5
 PAUSE_SECONDS = 1.0
 POLL_SECONDS = 0.005
+EDGE_MARGIN = 20
 IMAGE_PATH = Path(__file__).resolve().with_name('sonic-sprite.png')
 # 원본 왼쪽 위 기준 (x, top, width, height).
 WALK = (
@@ -68,6 +69,35 @@ ACTIONS = (
     ('대각선 달리기', DIAGONAL_RUN), ('대각선 질주', DIAGONAL_FAST_RUN),
     ('공중 회전', TUMBLE), ('정면 달리기', FRONT_RUN), ('포즈', POSE),
 )
+# 초당 픽셀 단위. 회전 준비와 포즈는 제자리에서 재생한다.
+MOTION_SPEEDS = {
+    '걷기 및 회전 진입': (120, 0),
+    '달리기': (240, 0),
+    '질주': (360, 0),
+    '회전': (0, 0),
+    '고속 회전': (320, 0),
+    '대각선 달리기': (180, 100),
+    '대각선 질주': (280, 160),
+    '공중 회전': (200, 0),
+    '정면 달리기': (0, -180),
+    '포즈': (0, 0),
+}
+
+
+def bounce(position, velocity, elapsed, lower, upper):
+    """넘친 거리까지 반영하여 경계 안으로 반사한다."""
+    span = upper - lower
+    offset = (position - lower + velocity * elapsed) % (2 * span)
+    if offset >= span:
+        position = upper - (offset - span)
+        velocity = -velocity
+    else:
+        position = lower + offset
+    if position <= lower:
+        velocity = abs(velocity)
+    elif position >= upper:
+        velocity = -abs(velocity)
+    return position, velocity
 
 
 class Playback:
@@ -78,6 +108,25 @@ class Playback:
         self.completed_repeats = 0
         self.paused = False
         self.deadline = now + FRAME_SECONDS
+        self.last_update = now
+        self.reset_motion()
+
+    def reset_motion(self):
+        self.x = CANVAS_WIDTH / 2
+        self.y = CANVAS_HEIGHT / 2
+        self.vx, self.vy = MOTION_SPEEDS[self.actions[self.action_index][0]]
+        self.half_width = max(frame[2] for frame in self.frames) * SCALE / 2
+        self.half_height = max(frame[3] for frame in self.frames) * SCALE / 2
+
+    def move(self, elapsed):
+        self.x, self.vx = bounce(
+            self.x, self.vx, elapsed,
+            EDGE_MARGIN + self.half_width,
+            CANVAS_WIDTH - EDGE_MARGIN - self.half_width)
+        self.y, self.vy = bounce(
+            self.y, self.vy, elapsed,
+            EDGE_MARGIN + self.half_height,
+            CANVAS_HEIGHT - EDGE_MARGIN - self.half_height)
 
     @property
     def frames(self):
@@ -88,6 +137,10 @@ class Playback:
         return self.frames[self.frame_index]
 
     def update(self, now):
+        elapsed = max(0.0, now - self.last_update)
+        self.last_update = now
+        if not self.paused:
+            self.move(elapsed)
         if now < self.deadline:
             return
         if self.paused:
@@ -95,6 +148,7 @@ class Playback:
             self.frame_index = 0
             self.completed_repeats = 0
             self.paused = False
+            self.reset_motion()
             self.deadline = now + FRAME_SECONDS
             return
         if self.frame_index == len(self.frames) - 1:
@@ -109,18 +163,19 @@ class Playback:
         self.deadline = now + FRAME_SECONDS
 
 
-def draw_frame(sprite, frame):
+def draw_frame(sprite, frame, position, facing_left):
     x, top, width, height = frame
-    sprite.clip_draw(x, sprite.h - top - height, width, height,
-                     CANVAS_WIDTH // 2, CANVAS_HEIGHT // 2,
-                     width * SCALE, height * SCALE)
+    sprite.clip_composite_draw(
+        x, sprite.h - top - height, width, height,
+        0, 'h' if facing_left else '', position[0], position[1],
+        width * SCALE, height * SCALE)
 
 
-def render(sprite, frame):
+def render(sprite, playback):
     pico2d.clear_canvas()
     pico2d.draw_rectangle(0, 0, CANVAS_WIDTH - 1, CANVAS_HEIGHT - 1,
                          r=160, g=160, b=160, filled=True)
-    draw_frame(sprite, frame)
+    draw_frame(sprite, playback.frame, (playback.x, playback.y), playback.vx < 0)
     pico2d.update_canvas()
 
 
@@ -141,11 +196,12 @@ def quit_requested():
 
 def run_loop(sprite, playback):
     """정지 상태에서도 매 루프 종료 입력을 확인한다."""
-    render(sprite, playback.frame)
-    playback.deadline = pico2d.get_time() + FRAME_SECONDS
+    render(sprite, playback)
+    playback.last_update = pico2d.get_time()
+    playback.deadline = playback.last_update + FRAME_SECONDS
     while not quit_requested():
         playback.update(pico2d.get_time())
-        render(sprite, playback.frame)
+        render(sprite, playback)
         pico2d.delay(POLL_SECONDS)
 
 
