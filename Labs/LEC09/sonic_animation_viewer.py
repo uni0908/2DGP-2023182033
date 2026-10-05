@@ -1,9 +1,12 @@
 """Sonic 스프라이트 애니메이션 뷰어."""
 
+from pathlib import Path
+
 import pico2d
 
 CANVAS_WIDTH = 1200
 CANVAS_HEIGHT = 800
+IMAGE_PATH = Path(__file__).resolve().with_name('sonic-sprite.png')
 
 
 def quit_requested():
@@ -15,6 +18,7 @@ def quit_requested():
 def main():
     pico2d.open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     try:
+        sprite = pico2d.load_image(str(IMAGE_PATH))
         while not quit_requested():
             pico2d.clear_canvas()
             pico2d.update_canvas()
