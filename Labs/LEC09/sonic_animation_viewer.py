@@ -20,6 +20,14 @@ def draw_frame(sprite, frame):
                      width * SCALE, height * SCALE)
 
 
+def render(sprite, frame):
+    pico2d.clear_canvas()
+    pico2d.draw_rectangle(0, 0, CANVAS_WIDTH - 1, CANVAS_HEIGHT - 1,
+                         r=160, g=160, b=160, filled=True)
+    draw_frame(sprite, frame)
+    pico2d.update_canvas()
+
+
 def load_sprite(path=IMAGE_PATH):
     if not path.is_file():
         raise RuntimeError(f'스프라이트 파일을 찾을 수 없습니다: {path}')
@@ -40,9 +48,7 @@ def main():
     try:
         sprite = load_sprite()
         while not quit_requested():
-            pico2d.clear_canvas()
-            draw_frame(sprite, FIRST_FRAME)
-            pico2d.update_canvas()
+            render(sprite, FIRST_FRAME)
             pico2d.delay(0.01)
     finally:
         pico2d.close_canvas()
