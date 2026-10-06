@@ -18,14 +18,14 @@ def handle_events():
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 running = False
-            elif event.key == SDLK_RIGHT:
+            elif event.key in (SDLK_RIGHT, SDLK_LEFT):
                 pressed_keys.add(event.key)
 
 
 def update():
     global x, frame
-    if SDLK_RIGHT in pressed_keys:
-        x += 5
+    dir_x = (SDLK_RIGHT in pressed_keys) - (SDLK_LEFT in pressed_keys)
+    x += dir_x * 5
     frame = (frame + 1) % 8
 
 
