@@ -6,6 +6,7 @@ ASSET_DIR = Path(__file__).resolve().parent
 running = True
 x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
 frame = 0
+pressed_keys = set()
 
 
 def handle_events():
@@ -17,10 +18,14 @@ def handle_events():
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 running = False
+            elif event.key == SDLK_RIGHT:
+                pressed_keys.add(event.key)
 
 
 def update():
-    global frame
+    global x, frame
+    if SDLK_RIGHT in pressed_keys:
+        x += 5
     frame = (frame + 1) % 8
 
 
