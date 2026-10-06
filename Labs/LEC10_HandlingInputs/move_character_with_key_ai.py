@@ -4,6 +4,7 @@ from pico2d import *
 TUK_WIDTH, TUK_HEIGHT = 1280, 1024
 ASSET_DIR = Path(__file__).resolve().parent
 running = True
+x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
 
 
 def handle_events():
@@ -24,14 +25,16 @@ def update():
 def draw():
     clear_canvas()
     tuk_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
+    character.clip_draw(0, 300, 100, 100, x, y)
     update_canvas()
 
 
 def main():
-    global tuk_ground
+    global tuk_ground, character
 
     open_canvas(TUK_WIDTH, TUK_HEIGHT)
     tuk_ground = load_image(str(ASSET_DIR / 'TUK_GROUND.png'))
+    character = load_image(str(ASSET_DIR / 'animation_sheet.png'))
     while running:
         handle_events()
         update()
