@@ -8,6 +8,7 @@ x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
 frame = 0
 facing = 1  # 1: 오른쪽, -1: 왼쪽
 pressed_keys = set()
+animation_row = 300
 
 
 def handle_events():
@@ -26,21 +27,25 @@ def handle_events():
 
 
 def update():
-    global x, y, frame, facing
+    global x, y, frame, facing, animation_row
     dir_x = (SDLK_RIGHT in pressed_keys) - (SDLK_LEFT in pressed_keys)
     if dir_x != 0:
         facing = dir_x
     x += dir_x * 5
     dir_y = (SDLK_UP in pressed_keys) - (SDLK_DOWN in pressed_keys)
     y += dir_y * 5
+    moving = dir_x != 0 or dir_y != 0
+    if moving:
+        animation_row = 100 if facing == 1 else 0
+    else:
+        animation_row = 300 if facing == 1 else 200
     frame = (frame + 1) % 8
 
 
 def draw():
     clear_canvas()
     tuk_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
-    idle_row = 300 if facing == 1 else 200
-    character.clip_draw(frame * 100, idle_row, 100, 100, x, y)
+    character.clip_draw(frame * 100, animation_row, 100, 100, x, y)
     update_canvas()
 
 
