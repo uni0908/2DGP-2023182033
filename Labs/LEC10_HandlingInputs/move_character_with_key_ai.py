@@ -5,6 +5,7 @@ TUK_WIDTH, TUK_HEIGHT = 1280, 1024
 ASSET_DIR = Path(__file__).resolve().parent
 running = True
 x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
+frame = 0
 
 
 def handle_events():
@@ -19,13 +20,14 @@ def handle_events():
 
 
 def update():
-    pass
+    global frame
+    frame = (frame + 1) % 8
 
 
 def draw():
     clear_canvas()
     tuk_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
-    character.clip_draw(0, 300, 100, 100, x, y)
+    character.clip_draw(frame * 100, 300, 100, 100, x, y)
     update_canvas()
 
 
