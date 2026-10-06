@@ -6,6 +6,7 @@ ASSET_DIR = Path(__file__).resolve().parent
 running = True
 x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
 frame = 0
+facing = 1  # 1: 오른쪽, -1: 왼쪽
 pressed_keys = set()
 
 
@@ -25,8 +26,10 @@ def handle_events():
 
 
 def update():
-    global x, y, frame
+    global x, y, frame, facing
     dir_x = (SDLK_RIGHT in pressed_keys) - (SDLK_LEFT in pressed_keys)
+    if dir_x != 0:
+        facing = dir_x
     x += dir_x * 5
     dir_y = (SDLK_UP in pressed_keys) - (SDLK_DOWN in pressed_keys)
     y += dir_y * 5
@@ -36,7 +39,8 @@ def update():
 def draw():
     clear_canvas()
     tuk_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
-    character.clip_draw(frame * 100, 300, 100, 100, x, y)
+    idle_row = 300 if facing == 1 else 200
+    character.clip_draw(frame * 100, idle_row, 100, 100, x, y)
     update_canvas()
 
 
