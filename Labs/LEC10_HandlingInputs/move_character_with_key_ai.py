@@ -18,7 +18,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 running = False
-            elif event.key in (SDLK_RIGHT, SDLK_LEFT, SDLK_UP):
+            elif event.key in (SDLK_RIGHT, SDLK_LEFT, SDLK_UP, SDLK_DOWN):
                 pressed_keys.add(event.key)
         elif event.type == SDL_KEYUP:
             pressed_keys.discard(event.key)
@@ -28,8 +28,8 @@ def update():
     global x, y, frame
     dir_x = (SDLK_RIGHT in pressed_keys) - (SDLK_LEFT in pressed_keys)
     x += dir_x * 5
-    if SDLK_UP in pressed_keys:
-        y += 5
+    dir_y = (SDLK_UP in pressed_keys) - (SDLK_DOWN in pressed_keys)
+    y += dir_y * 5
     frame = (frame + 1) % 8
 
 
