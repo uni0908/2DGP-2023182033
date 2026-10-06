@@ -31,9 +31,9 @@ def update():
     dir_x = (SDLK_RIGHT in pressed_keys) - (SDLK_LEFT in pressed_keys)
     if dir_x != 0:
         facing = dir_x
-    x += dir_x * 5
+    x = max(50, min(TUK_WIDTH - 50, x + dir_x * 5))
     dir_y = (SDLK_UP in pressed_keys) - (SDLK_DOWN in pressed_keys)
-    y += dir_y * 5
+    y = max(50, min(TUK_HEIGHT - 50, y + dir_y * 5))
     moving = dir_x != 0 or dir_y != 0
     if moving:
         animation_row = 100 if facing == 1 else 0
